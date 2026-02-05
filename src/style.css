@@ -1,28 +1,285 @@
-/* background colours */
+html,body {
+    height:100%;
+    margin:0;
+    box-sizing: border-box;
+}
+
 body {
     background-color: royalblue;
-    border: 5px darkblue solid;
-    margin: 20px;
-    padding: 10px;
-    height: 735px
-
-}
-div {
-    border: 5px blue;
-}
-
-/* Main title */
-body {
-    font-family: sans-serif;
+    color: white;
     text-align: center;
     padding: 20px;
+}
+
+.screen {
+    display: none;
+    padding-bottom: 120px;
+}
+.screen:not(.hidden) { display: block; }
+
+/* Makes all the buttons look the same*/
+.menu button, button.nav, button.back, button.repeat_audio, button.assistance, input[type="text"] {
+    margin: 10px;
+    padding: 16px 36px;
+    font-size: 20px;
+    border: 3px solid darkblue;
+    border-radius: 12px;
+    cursor: pointer;
+    background: white;
+    color: darkblue;
+}
+
+/*used in the corner of every screen*/
+button.assistance{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+/*makes the button look a bit less obvious unless looking for it as its on every screen*/
+button.back {
+    color: darkblue;
+    border: 2px dashed grey;
+    padding: 10px 18px;
+    margin-top: 18px;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+}
+
+/*Repeat audio button*/
+button.repeat_audio {
+    position: fixed;
+    bottom: 20px;
+    right: 210px;
+
+}
+
+/*size of the flags used*/
+.flags {
+    width: 28px;
+    height: 18px;
+    object-fit:cover;
+    margin-right:10px;
+    border-radius:3px;
+}
+
+/*flags are put next to the text*/
+.language-menu button {
+    display:inline-flex;
+    align-items:center;
+}
+
+/*animation for the transition when lower button is clicked*/
+.menu { transition: 0.25s; }
+
+/*all of the buttons new positions when they are lowered*/
+
+.lowered {
+    padding-top: 220px;
+}
+
+.lowered .menu {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 140px;
+    width: 100%;
+}
+
+.lowered input, .lowered select, .lowered textarea {
+    position: relative;
+    top: 100px;
+    margin-top: 40px;
+}
+
+.lowered .button-area {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
+.lowered button.back {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+}
+
+.lowered .cart-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.lowered .continue-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.lowered button.assistance {
+    position: fixed;
+    top: auto;
+    bottom: 140px;
+    right: 20px;
+}
+
+.bottom-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.bottom-controls .nav{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.bottom-controls .back {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+}
+
+/*The headings lowered so it is easier to see*/
+.lowered h1, .lowered h2, .lowered h3 {
+    margin-top: 80px;
+}
+
+input[type="text"] {
+    width: 340px;
+    padding: 14px;
+    border-radius:10px;
+    border:2px solid darkblue;
+    font-size:20px;
+}
+
+/*increases the size of the text to make it easier to read*/
+.large-text { font-size: 1.25em; }
+.large-text .menu button, .large-text button.nav, .large-text button.back, .large-text button.assistance, .large-text button.repeat_audio, .large-text input[type="text"] {
+    font-size: 1.1em;
+    padding: 20px 40px;
+}
+
+#cart-items p {
+    background: black;
+    padding:10px;
+    border-radius:8px;
+    margin:8px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:white;
+}
+#cart-items p button {
+    margin-left: 12px;
+    padding:6px 10px;
+    font-size:20px;
+}
+
+.lower-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: 3px solid darkblue;
+    color: darkblue;
+}
+
+/*high contrast settings for every button*/
+.menu button.selected {
+    outline: 4px solid orange;
+    background: orange;
+    color: black;
+}
+
+.high-contrast {
+    background: black;
+    color: orange;
+}
+
+.high-contrast .menu button, .high-contrast button.nav, .high-contrast button.back, .high-contrast button.repeat_audio, .high-contrast button.assistance {
+    background: orange;
+    color: black;
+}
+
+.high-contrast .menu button.selected {
+    background: orange;
+    border-color: white;
+    outline-color: white;
+}
+
+.high-contrast input[type="number"] {
+    background: orange;
+    color: black;
+    border-color: white;
+}
+
+.high-contrast #screen-end button {
+    background: orange;
+    color: black;
+    border-color: white;
+}
+
+
+.high-contrast .lower-toggle {
+    background: orange;
+    color: black;
+    border-color: white;
+}
+
+
+/*popup but in high contrasting colours*/
+.high-contrast .custom-popup {
+    background-color: orange;
+    color: black;
+    border: 4px solid white;
+}
+
+/*how the popup will look*/
+.custom-popup {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: black;
     color: white;
+    text-align: center;
+    border-radius: 12px;
+    padding: 20px;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s, bottom 0.3s;
     font-size: 20px;
 }
 
-.menu button {
-    margin: 10px;
-    padding: 10px 20px;
+.custom-popup.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 400px;
+}
+
+/*bigger buttons for the end screen*/
+#screen-end button {
+    padding: 20px 40px;
     font-size: 20px;
-    cursor: pointer;
+    margin: 15px;
+}
+
+/*input areas*/
+input[type="number"] {
+    width: 450px;
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid royalblue;
+    font-size: 20px;
+    margin: 10px;
 }

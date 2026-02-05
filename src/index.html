@@ -1,29 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Hasty Hotel</title>
+    <meta charset="utf-8" />
+    <title>Hasty Hotel Kiosk</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-    <h1>Welcome to Hasty Hotel</h1>
-    <div class="Main Menu">
-        <button onclick="showCheckIn" style="
-        border: darkblue solid;
-        border-width: 3px
-        ">Check In</button>
-        <button onclick ="showCheckOut" style="
-        border: darkblue solid;
-        border-width: 3px
-        ">Check Out</button>
-        <button onclick ="showRooms" style="
-        border: darkblue solid;
-        border-width: 3px
-        ">Rooms</button>
-        <button onclick ="alert('Someone will be with you soon.')" style="
-        border: darkblue solid;
-        border-width: 3px;
-        ">Assistance</button>
+<body id="body">
+
+<!--Language selection screen-->
+<div id="screen-language" class="screen">
+    <h1 data-key="select_language">Select Your Language</h1>
+    <div class="menu language-menu">
+
+        <!--English-->
+        <button onclick="startApp('English')" aria-label="English">
+            <img class="flags" src="flags/en.png" alt="EN">
+            <span class="lang-label">English</span>
+        </button>
+
+        <!--Spanish-->
+        <button onclick="startApp('Español')" aria-label="Español">
+            <img class="flags" src="flags/es.png" alt="ES">
+            <span class="lang-label">Español</span>
+        </button>
+
+        <!--French-->
+        <button onclick="startApp('Français')" aria-label="Français">
+            <img class="flags" src="flags/fr.png" alt="FR">
+            <span class="lang-label">Français</span>
+        </button>
+
+        <!--Chinese-->
+        <button onclick="startApp('中文')" aria-label="中文">
+            <img class="flags" src="flags/cn.png" alt="CN">
+            <span class="lang-label">中文</span>
+        </button>
     </div>
-    <link rel = "stylesheet" href = "style.css">
+    <div>
+        <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+    </div>
+
+    <!--Lowers every button-->
+    <div class="lower-toggle">
+        <label>
+            <input id="lowerButtonsToggle" type="checkbox" onchange="toggleLowered()">
+            <span data-key="lower_buttons">Lower Buttons</span>
+        </label>
+    </div>
+</div>
+
+<!--Accessibility screen-->
+<div id="screen-accessibility" class="screen hidden">
+    <h1 data-key="accessibility_options">Accessibility Options</h1>
+    <p data-key="accessibility_instructions">Select any accessibility features you need:</p>
+
+    <div class="menu">
+        <!--Makes text bigger-->
+        <button onclick="toggleLargeText()" data-key="large_text">Large Text</button>
+
+        <!--Changes colours to high contrast to make it easier for colour blind people-->
+        <button onclick="toggleHighContrast()" data-key="high_contrast">High Contrast</button>
+
+        <!--Allows for audio-->
+        <button onclick="toggleAudio()" data-key="audio_assist">Audio Assistance</button>
+    </div>
+
+    <div class="bottom-controls">
+
+        <!--Continue button-->
+        <button class="nav" onclick="goTo('screen-start')" data-key="continue">Continue</button>
+
+        <!--Back button-->
+        <button class="back" onclick="goBack()" data-key="back">Back</button>
+
+        <!--Assistance button-->
+        <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+    </div>
+</div>
+
+<!--Start screen-->
+<div id="screen-start" class="screen hidden">
+    <h1 data-key="welcome">Welcome to Hasty Hotel</h1>
+    <p><span data-key="current_language">Your selected language:</span> <strong id="current-language">English</strong></p>
+
+    <div id="menu" class="menu main-menu">
+
+        <!--Able to check in if has a reservation-->
+        <button onclick="goTo('screen-reservation-check')" data-key="start_checkin">Start Check-In</button>
+
+        <!--Check out once stay is finished-->
+        <button onclick="goTo('screen-checkout')" data-key="check_out">Check-Out</button>
+
+        <!--Check if any rooms are available-->
+        <button onclick="goTo('screen-room-availability')" data-key="available_rooms">Available Rooms</button>
+
+    </div>
+        <button class="back" onclick="goBack()" data-key="back">Back</button>
+        <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+</div>
+
+<!--Asks the user if they have a reservation-->
+<div id="screen-reservation-check" class="screen hidden">
+    <h1 data-key="reservation_question">Do You Have a Reservation?</h1>
+    <div class="menu">
+        <!--If yes is selected then take the user to reservation code area-->
+        <button onclick="goTo('screen-reservation-enter')" data-key="yes">Yes</button>
+        <!--If no is selected then user is taken to availible rooms page-->
+        <button onclick="goTo('screen-room-availability')" data-key="no">No</button>
+    </div>
+    <button class="back" onclick="goBack()" data-key="back">Back</button>
+    <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+</div>
+
+<!--Gets the user to enter a reservation code-->
+<div id="screen-reservation-enter" class="screen hidden">
+
+    <!--User is asked to enter a reservation code-->
+    <h1 data-key="enter_res_code">Enter Your Reservation Code</h1>
+    <label for="reservationCode"></label><input id="reservationCode" type="text" data-key-placeholder="reservation_placeholder" placeholder="ABC123" />
+    <div class="menu">
+
+        <!--Makes sure the code is a real code-->
+        <button onclick="validateReservation()" data-key="continue">Continue</button>
+    </div>
+    <button class="back" onclick="goBack()" data-key="back">Back</button>
+    <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+</div>
+
+<!--Addon screen-->
+<div id="screen-room-add-ons" class="screen hidden">
+    <h1 data-key="Add-ons"></h1>
+    <div class="menu">
+
+        <!--Adds breakfast addon to the cart -->
+        <button id="addon-breakfast" onclick="toggleAddon('Breakfast', 15)" data-key="breakfast">Breakfast – £15</button>
+
+        <!--Adds spa access addon to the cart-->
+        <button id="addon-spa" onclick="toggleAddon('Spa Access', 30)" data-key="spa">Spa Access – £30</button>
+
+        <!--Adds pool pass  to the cart-->
+        <button id="addon-pool" onclick="toggleAddon('Pool Pass', 10)" data-key="pool">Pool Pass – £10</button>
+
+    </div>
+
+    <div class="bottom-controls">
+        <button class="nav" onclick="goToCart()" data-key="view_cart">View Cart</button>
+        <button class="back" onclick="goBack()" data-key="back">Back</button>
+        <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+    </div>
+</div>
+
+<!--Available room screen-->
+<div id="screen-room-availability" class="screen hidden">
+    <h1 data-key="available_rooms">Available Rooms</h1>
+    <p data-key="select_dates">Select your dates and room type.</p>
+    <div class="menu">
+
+        <!--Allows you to see what rooms are available-->
+        <button onclick="goTo('screen-room-options')" data-key="see_room_options">See Room Options</button>
+
+    </div>
+    <button class="back" onclick="goBack()" data-key="back">Back</button>
+    <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+</div>
+
+<!--Room choice screen-->
+<div id="screen-room-options" class="screen hidden">
+    <h1 data-key="room_options">Room Options</h1>
+
+    <div class="menu">
+
+        <!--Adds standard room to the cart-->
+        <button onclick="selectRoom('Standard Room', 80)" data-key="standard_room">Standard Room – £80</button>
+
+        <!--Adds deluxe room to the cart-->
+        <button onclick="selectRoom('Deluxe Room', 120)" data-key="deluxe_room">Deluxe Room – £120</button>
+
+        <!--Adds suite room to the cart-->
+        <button onclick="selectRoom('Suite', 200)" data-key="suite_room">Suite – £200</button>
+    </div>
+
+    <!--Makes sure the inputed amount of days is valid-->
+    <input id="days" type="number" min="1" max="14" step="1"
+           data-key-placeholder="days_placeholder" />
+
+    <div class="bottom-controls">
+        <button class="nav" onclick="goToAddOns()" data-key="continue">Continue</button>
+        <button class="back" onclick="goBack()" data-key="back">Back</button>
+        <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+    </div>
+</div>
+
+<!--Users cart screen-->
+<div id="screen-cart" class="screen hidden">
+    <h1 data-key="your_cart">Your Cart</h1>
+    <div id="cart-items"></div>
+
+    <h2>Total: £<span id="cart-total">0</span></h2>
+
+    <div class="menu">
+
+        <!--User can go to the payment page-->
+        <button onclick="goTo('screen-payment')" data-key="proceed_payment">Proceed to Payment</button>
+
+        <!--Allows user to add another room-->
+        <button onclick="addAnotherRoom()" data-key="add_room">Add another room</button>
+    </div>
+
+    <button class="back" onclick="goBack()" data-key="back">Back</button>
+    <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+</div>
+
+<!--Payment screen-->
+<div id="screen-payment" class="screen hidden">
+    <h1 data-key="Payment"></h1>
+    <p data-key="Select your payment method:"></p>
+
+    <div class="menu">
+
+        <!--Payment by card-->
+        <button onclick="finishPayment()" data-key="card">Card</button>
+
+        <!--Paymeent by mobile wallet-->
+        <button onclick="finishPayment()" data-key="mobile_wallet">Mobile Wallet</button>
+
+        <!--Payment by QR code-->
+        <button onclick="finishPayment()" data-key="qr">QR Code</button>
+
+        <!--Payment by crypto-->
+        <button onclick="finishPayment()" data-key="crypto">Crypto</button>
+    </div>
+
+    <button class="back" onclick="goBack()" data-key="back">Back</button>
+    <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+</div>
+
+<!--Thank you screen-->
+<div id="screen-end" class="screen hidden">
+    <h1 data-key="thank_you">Thank You!</h1>
+
+    <h3 data-key="Would you like a receipt?"></h3>
+
+    <!--Pop ups for if receipt is selected-->
+    <button onclick="alertTranslated('receipt_sent')" data-key="email_receipt">Email Receipt</button>
+    <button onclick="alertTranslated('printed')" data-key="print_receipt">Print Receipt</button>
+
+    <h3 data-key="Would you like tourist recommendations?"></h3>
+    <button onclick="alertTranslated('recommend_sent')" data-key="send">Send</button>
+
+    <!--Resets kiosk at the end-->
+    <button onclick="location.reload()" data-key="finish">Finish</button>
+<div>
+    <button class="back" onclick="goBack()" data-key="back">Back</button>
+    <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+</div>
+</div>
+
+<!--Assistance screen-->
+<div id="screen-assistance" class="screen hidden">
+    <h1 data-key="Assistance"></h1>
+
+    <div class="menu">
+
+        <!--Allows user to get help when stuck-->
+        <button onclick="confirmAssistance()" data-key="request_assistance">Request Assistance</button>
+
+    </div>
+
+    <button class="back" onclick="goBack()" data-key="back">Back</button>
+</div>
+
+<!--Checkout screen-->
+<div id="screen-checkout" class="screen hidden">
+    <h1 data-key="check_out">Check-Out</h1>
+    <p data-key="enter_room_number">Please enter your room number:</p>
+    <label for="roomNumber"></label>
+    <input id="roomNumber" type="number" data-key-placeholder="room_number_placeholder" placeholder="Room Number" />
+
+    <div class="menu">
+        <button onclick="processCheckout()" data-key="complete_checkout">Complete Check-Out</button>
+    </div>
+
+    <button class="back" onclick="goBack()" data-key="back">Back</button>
+    <button class="assistance" onclick="showAssistance()" data-key="assistance">Assistance</button>
+</div>
+
+<button id="repeat-audio" class="repeat_audio" onclick="readCurrentScreen()" data-key="repeat_audio" style="display: none;">Repeat Audio</button>
+<div id="custom-popup" class="custom-popup"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
